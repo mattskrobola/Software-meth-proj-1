@@ -18,8 +18,10 @@
                   <Button fx:id="deleteButton" mnemonicParsing="false" text="Delete" />
               </buttons>
             </ButtonBar>
-            <TextField fx:id="addText" layoutY="405.0" prefWidth="300.0" />
+            <TextField fx:id="addText" layoutY="405.0" prefWidth="116.0" />
+            <TextField fx:id="addArtist" layoutY="405.0" layoutX = "175" prefWidth="116.0"  />
          </children>
+         
       </AnchorPane>
    </children>
 </AnchorPane>
