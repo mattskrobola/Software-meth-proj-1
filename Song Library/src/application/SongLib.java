@@ -8,7 +8,7 @@ import javafx.scene.layout.AnchorPane;
 import view.LibraryController;
 
 
-public class Main extends Application {
+public class SongLib extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) 
@@ -31,6 +31,4 @@ public class Main extends Application {
 		launch(args);
 	}
 	
-	// Mahogany
-	// Minecraft
 }
