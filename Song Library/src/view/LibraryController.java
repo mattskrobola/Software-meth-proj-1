@@ -19,8 +19,16 @@ public class LibraryController {
 	private ObservableList<String> songList;
 	
 	public void start(Stage mainStage) throws FileNotFoundException {
+		
+		songList = FXCollections.observableArrayList();
+		
 		Scanner in = new Scanner(new FileReader("songlist"));
-		songList = FXCollections.observableArrayList(in.next());
+		while (in.hasNext()) {
+			songList.add(in.next());
+		}
+		
 		listView.setItems(songList);
+		
+		listView.getSelectionModel().select(0);
 	}
 }
