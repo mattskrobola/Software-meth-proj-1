@@ -6,19 +6,19 @@ public class Song implements Serializable {
 	String songName;
 	String artist;
 	String year;
-	String date;
+	String album;
 	
-	public Song(String songName,String artist, String year, String date) {
+	public Song(String songName,String artist, String year, String album) {
 		this.artist = artist;
 		this.songName = songName;
-		this.date = date;
 		this.year = year;
+		this.album = album;
 	}
 	public Song(String songName, String artist) {
 		this(songName,artist,null,null);
 	}
-	public String getDate() {
-		return date;
+	public String getAlbum() {
+		return album;
 	}
 	public String getArtist() {
 		return artist;
