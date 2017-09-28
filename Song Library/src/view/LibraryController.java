@@ -1,5 +1,9 @@
 package view;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Scanner;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,8 +18,9 @@ public class LibraryController {
 	
 	private ObservableList<String> songList;
 	
-	public void start(Stage mainStage) {
-		songList = FXCollections.observableArrayList("All Star","Sandstorm");
+	public void start(Stage mainStage) throws FileNotFoundException {
+		Scanner in = new Scanner(new FileReader("songlist"));
+		songList = FXCollections.observableArrayList(in.next());
 		listView.setItems(songList);
 	}
 }
