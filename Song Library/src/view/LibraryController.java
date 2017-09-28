@@ -33,6 +33,8 @@ public class LibraryController {
 	
 	public void start(Stage mainStage) throws IOException, FileNotFoundException, ClassNotFoundException {
 		
+		// if the file is empty, create a new list, otherwise read it from the file
+		
 		songList = FXCollections.observableArrayList();
 		
 		Scanner in = new Scanner(new FileReader("songlist"));
@@ -44,26 +46,34 @@ public class LibraryController {
 		
 		listView.setItems(songList);
 		
+		// selects the first song upon starting the app
 		listView.getSelectionModel().select(0);
 		
 		// eventually make separate methods for event handling
 		
 		addButton.setOnAction((event) -> {
-			songList.add(addText.getText());	
-			// write list to file
+			
+			if (!addText.getText().isEmpty()) songList.add(addText.getText());	
+			
+			// write list to file here
 		});
 		
 		editButton.setOnAction((event) -> {
+			
 			int index = listView.getSelectionModel().getSelectedIndex();
-			songList.set(index, addText.getText());
-			// write list to file
+			
+			if (!addText.getText().isEmpty() && index >= 0) songList.set(index, addText.getText());
+			
+			// write list to file here
 		});
 		
 		deleteButton.setOnAction((event) -> {
+			
 			int index = listView.getSelectionModel().getSelectedIndex();
-			// add error check
-			songList.remove(index);
-			// write list to file
+			
+			if (!songList.isEmpty() && index >= 0) songList.remove(index);
+			
+			// write list to file here
 		});
 		
 	}
