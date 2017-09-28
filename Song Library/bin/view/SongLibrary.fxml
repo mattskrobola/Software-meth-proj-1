@@ -9,6 +9,12 @@ xmlns:fx="http://javafx.com/fxml/1"
 xmlns="http://javafx.com/javafx/8.0.111"
 fx:controller="view.LibraryController">
    <children>
-      <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0" />
+      <ListView fx:id="listView"
+      	prefHeight="200.0" 
+      	prefWidth="200.0" 
+      	AnchorPane.bottomAnchor="10.0" 
+      	AnchorPane.leftAnchor="10.0" 
+      	AnchorPane.rightAnchor="10.0" 
+      	AnchorPane.topAnchor="10.0" />
    </children>
 </AnchorPane>
