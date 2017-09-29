@@ -8,7 +8,7 @@ public class Song implements Serializable {
 	String year;
 	String album;
 	
-	public Song(String songName,String artist, String year, String album) {
+	public Song(String songName,String artist, String album, String year) {
 		this.artist = artist;
 		this.songName = songName;
 		this.year = year;
@@ -26,13 +26,25 @@ public class Song implements Serializable {
 	public String getYear(){
 		return year;
 	}
+	public void setSongName(String songName) {
+		this.songName = songName;
+	}
+	public void setAlbum(String album) {
+		this.album = album;
+	}
+	public void setArtist(String artist) {
+		this.artist = artist;
+	}
+	public void setYear(String year){
+		this.year = year;
+	}
 	public String getSongName() {
 		return songName;
 	}
 	
 	@Override
 	public String toString() {
-		return songName + " " + artist;
+		return songName + " : " + artist;
 	}
 	
 	public int compareTo(Song song) {

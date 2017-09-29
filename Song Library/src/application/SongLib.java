@@ -20,7 +20,7 @@ public class SongLib extends Application {
 		LibraryController libraryController = loader.getController();
 		libraryController.start(primaryStage);
 		
-		Scene scene = new Scene(root,305,440);
+		Scene scene = new Scene(root,450,600);
 		// scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		primaryStage.setResizable(false);
 		primaryStage.setScene(scene);

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import application.Song;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -32,11 +34,20 @@ public class LibraryController {
 	private Button deleteButton;
 	
 	@FXML
-	private TextField addText;
+	private TextField addSongName;
 	
-
+	@FXML
+	private TextField addAlbum;
+	
+	@FXML
+	private TextField addYear;
+	
+	@FXML         
+	ListView<String> detailsView;
+	
 	
 	private ObservableList<String> songList;
+	private ObservableList<String> detailsList;
 	
 	public void start(Stage mainStage) throws IOException, FileNotFoundException, ClassNotFoundException {
 		
@@ -48,6 +59,7 @@ public class LibraryController {
 		
 		// if the file is empty, create a new list, otherwise read it from the file
 		songList = FXCollections.observableArrayList();
+		detailsList = FXCollections.observableArrayList();
 		
 		//since observableList isn't serializable we need to keep this list up to date for the file
 		songs = readFromFile();
@@ -61,22 +73,37 @@ public class LibraryController {
 		// selects the first song upon starting the app
 		listView.getSelectionModel().select(0);
 		
+		if(!songs.isEmpty()) {
+			Song tempSong = songs.get(0);
+			detailsList.add("Song Name: " + tempSong.getSongName());
+			detailsList.add("Artist: " + tempSong.getArtist());
+			if(!tempSong.getAlbum().equals("")) detailsList.add("Album : " + tempSong.getAlbum());
+			if(!tempSong.getYear().equals("")) detailsList.add("Year: " + tempSong.getYear());
+			detailsView.setItems(detailsList);
+		}
+		
 		// eventually make separate methods for event handling
 		
 		//each time we update/add/delete we sort the arraylist,update the observable list, and write the new list of songs to the file
 		
 		addButton.setOnAction((event) -> {
 			//TODO check if song exists
-			if (!addText.getText().isEmpty() && !addArtist.getText().isEmpty()) {
-				songs.add(new Song(addText.getText(), addArtist.getText()));
-				sortAndUpdate(songs);
-				try {
-					writeToFile(songs);
-				} catch (IOException e) {
-					//change this
-					e.printStackTrace();
+			if(!exists(new Song(addSongName.getText(), addArtist.getText(), addAlbum.getText(), addYear.getText()))){
+				if (!addSongName.getText().isEmpty() && !addArtist.getText().isEmpty()) {
+					songs.add(new Song(addSongName.getText(), addArtist.getText(), addAlbum.getText(), addYear.getText()));
+					sortAndUpdate(songs);
+					try {
+						writeToFile(songs);
+					} catch (IOException e) {
+						//change this
+						e.printStackTrace();
+					}
+					listView.setItems(songList);
+					int tempIndex = findIndex(songs, addSongName.getText(), addArtist.getText());
+					listView.getSelectionModel().select(tempIndex);
+					clearTextFields();
 				}
-				listView.setItems(songList);
+				
 			}
 			
 			// write list to file here
@@ -86,9 +113,22 @@ public class LibraryController {
 			
 			int index = listView.getSelectionModel().getSelectedIndex();
 			
-			if (!addText.getText().isEmpty() && index >= 0 && !addArtist.getText().isEmpty()) {
+			if (index >= 0) {
+				Song tempSong = songs.get(index);
 				
-				songs.set(index,new Song(addText.getText(), addArtist.getText()));
+				if(!addSongName.getText().isEmpty()) {
+					tempSong.setSongName(addSongName.getText());
+				}
+				if(!addArtist.getText().isEmpty()) {
+					tempSong.setArtist(addArtist.getText());
+				}
+				if(!addYear.getText().isEmpty()){
+					tempSong.setYear(addYear.getText());
+				}
+				if(!addAlbum.getText().isEmpty()) {
+					tempSong.setAlbum(addAlbum.getText());
+				}
+				songs.set(index,tempSong);
 				sortAndUpdate(songs);
 				try {
 					writeToFile(songs);
@@ -97,6 +137,8 @@ public class LibraryController {
 					e.printStackTrace();
 				}
 				listView.setItems(songList);
+				clearTextFields();
+				listView.getSelectionModel().select(index);
 			}
 			
 			// write list to file here
@@ -107,6 +149,7 @@ public class LibraryController {
 			int index = listView.getSelectionModel().getSelectedIndex();
 			
 			if (!songList.isEmpty() && index >= 0) {
+				int selectIndex = listView.getSelectionModel().getSelectedIndex();
 				songs.remove(index);
 				sortAndUpdate(songs);
 				try {
@@ -116,10 +159,29 @@ public class LibraryController {
 					e.printStackTrace();
 				}
 				listView.setItems(songList);
+				if(songs.size() <= selectIndex)listView.getSelectionModel().select(selectIndex-1);
+				else listView.getSelectionModel().select(selectIndex);
 			}
 			
 			// write list to file here
 		});
+		
+		listView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				detailsList.clear();
+				if(!listView.getSelectionModel().isEmpty()) {
+					Song tempSong = songs.get(listView.getSelectionModel().getSelectedIndex());
+					detailsList.add("Song Name: " + tempSong.getSongName());
+					detailsList.add("Artist: " + tempSong.getArtist());
+					if(!tempSong.getAlbum().equals("")) detailsList.add("Album : " + tempSong.getAlbum());
+					if(!tempSong.getYear().equals("")) detailsList.add("Year: " + tempSong.getYear());
+				}
+				detailsView.setItems(detailsList);
+			}
+		});
+
 		
 	}
 	public void writeToFile(ArrayList<Song> songList) throws IOException {
@@ -163,6 +225,25 @@ public class LibraryController {
 			}
 		}
 		return false;
+	}
+	
+	public int findIndex(ArrayList<Song> songs, String name, String artist) {
+		int index = 0;
+		for(int i =0; i < songs.size(); i++) {
+			if(songs.get(i).getSongName().equals(name)) {
+				if(songs.get(i).getArtist().equals(artist)){
+					return i;
+				}
+			}
+		}
+		return 0;
+	}
+	
+	public void clearTextFields() {
+		addSongName.clear();
+		addArtist.clear();
+		addYear.clear();
+		addAlbum.clear();
 	}
 
 	
