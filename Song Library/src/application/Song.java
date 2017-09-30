@@ -1,3 +1,7 @@
+/* 
+ *  Matt Skrobola and Kyle Reagle 
+ */
+
 package application;
 
 import java.io.Serializable;

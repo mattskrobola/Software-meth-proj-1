@@ -1,9 +1,12 @@
+/* 
+ *  Matt Skrobola and Kyle Reagle 
+ */
+
 package view;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Scanner;
 
 import application.Song;
 import javafx.beans.value.ChangeListener;
@@ -15,7 +18,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
@@ -58,10 +60,16 @@ public class LibraryController {
 	public void start(Stage mainStage) throws IOException, FileNotFoundException, ClassNotFoundException {
 		
 		//if the file is empty the inputstream will crash so adding an empty arraylist if file is empty
-		BufferedReader br = new BufferedReader(new FileReader("songlist"));     
+		File file = new File("songlist");
+		file.createNewFile(); // does not overwrite file if it exists already
+		
+		BufferedReader br = new BufferedReader(new FileReader("songlist"));
 		if (br.readLine() == null) {
 		    writeToFile(new ArrayList<Song>());
 		}
+		
+		br.close();
+ 
 		
 		// if the file is empty, create a new list, otherwise read it from the file
 		songList = FXCollections.observableArrayList();
@@ -203,6 +211,7 @@ public class LibraryController {
 	public void writeToFile(ArrayList<Song> songList) throws IOException {
 		ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("songlist"));
 		objectOutputStream.writeObject(songList);
+		objectOutputStream.close();
 	}
 	
 	public ArrayList<Song> readFromFile() throws FileNotFoundException, IOException, ClassNotFoundException {
@@ -244,7 +253,6 @@ public class LibraryController {
 	}
 	
 	public int findIndex(ArrayList<Song> songs, String name, String artist) {
-		int index = 0;
 		for(int i =0; i < songs.size(); i++) {
 			if(songs.get(i).getSongName().equals(name)) {
 				if(songs.get(i).getArtist().equals(artist)){
