@@ -118,6 +118,8 @@ public class LibraryController {
 						listView.getSelectionModel().select(tempIndex);
 						clearTextFields();
 					}
+				} else {
+					warning(mainStage, "You must have at least a song name and artist!");
 				}
 				
 			} else {
